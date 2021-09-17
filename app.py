@@ -63,3 +63,5 @@ def randomTen():
 '''Quotes From Albert Camu, Confucius, Socrates, Plato, Nietzsche, Immanuel Kant, René Descartes, Fyodor Dostoevsky,
     Marcus Aurelius,
 '''
+
+#asdsada testing

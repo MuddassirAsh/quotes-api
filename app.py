@@ -4,14 +4,21 @@ from bson import json_util
 import json
 from bs4 import BeautifulSoup
 import requests
+import os
+from dotenv import load_dotenv
 
+BASEDIR = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(BASEDIR, '.env'))
+
+
+load_dotenv()
 quotes = []
 container = []
 
-endPageNumber = 60
+endPageNumber = 2
 pageNumber = 1
 while pageNumber <= endPageNumber:
-    webpage = requests.get(f'https://www.goodreads.com/author/quotes/17212.Marcus_Aurelius?page={pageNumber}')
+    webpage = requests.get('https://www.goodreads.com/author/quotes/203707.Pythagoras?page={}'.format(pageNumber))
     soup = BeautifulSoup(webpage.text, 'html.parser')
     quoteText = soup.find_all("div", {"class": "quoteText"})
 
@@ -30,16 +37,18 @@ while pageNumber <= endPageNumber:
     pageNumber = pageNumber + 1
 
 
+with open('pythagoras.json', 'w', encoding='utf-8') as file:
+    file.write(JSONdata)
+
+
 
 app = Flask(__name__)   
 app.debug = True
 app.url_map.strict_slashes = False
 
-with open('aurelius.json', 'a', encoding='utf-8') as file:
-    file.write(JSONdata)
-    
-
-connection_string = "mongodb+srv://ratocato:Ashfaque64!@cluster0.pgynk.mongodb.net/cluster0?retryWrites=true&w=majority"
+username = os.getenv('USERNAME')
+password = os.getenv('PASSWORD')
+connection_string = "mongodb+srv://{}:{}@cluster0.pgynk.mongodb.net/cluster0?retryWrites=true&w=majority".format(username, password)
 client = MongoClient(connection_string)
 db = client['PhilosophicalAPI']
 collection = db['Quotes']
@@ -60,8 +69,7 @@ def randomTen():
         return serializeTenQuotes   
 
 
-'''Quotes From Albert Camu, Confucius, Socrates, Plato, Nietzsche, Immanuel Kant, René Descartes, Fyodor Dostoevsky,
-    Marcus Aurelius,
+'''Quotes from Albert Camu, Confucius, Socrates, Plato, Nietzsche, Immanuel Kant, René Descartes, Fyodor Dostoevsky,
+   Marcus Aurelius, David Hume, John Locke, Jean-Paul Sartre, Thomas Hobbes, Søren Kierkegaard, Bertrand Russell,
+   Epicurus, Niccolò Machiavelli, Arthur Schopenhauer, Pythagoras
 '''
-
-#asdsada testing

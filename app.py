@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import requests
 import os
 from dotenv import load_dotenv
-
+from markupsafe import escape
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(BASEDIR, '.env'))
@@ -70,17 +70,12 @@ def randomTen():
         serializeTenQuotes = json.dumps(tenQuotes, indent=2, separators=(',', ':'), sort_keys=True, default=json_util.default)  
         return serializeTenQuotes   
 
-@app.route('/socrates/', methods=['GET']) 
-def socrates():
-    authorQuotes = collection.find( {'Source': {'$in': ['Plato'] }})
+@app.route('/<author>', methods=['GET']) 
+def socrates(author):
+    authorQuotes = collection.find( {'Source': {'$in': [author] }})
     container_authorQuotes = [x for x in authorQuotes ]
     serializ_authorQuotes = json.dumps(container_authorQuotes, indent=2, separators=(',', ':'), sort_keys=True, default=json_util.default)  
     return serializ_authorQuotes
-
-
-@app.route('/dynamic/<dynamic>', methods=['GET'])
-def home(dynamic):
-    return f'Post {dynamic}'
 
 
 

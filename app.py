@@ -17,10 +17,10 @@ load_dotenv()
 quotes = []
 container = []
 
-endPageNumber = 2
+endPageNumber = 5
 pageNumber = 1
 while pageNumber <= endPageNumber:
-    webpage = requests.get('https://www.goodreads.com/author/quotes/203707.Pythagoras?page={}'.format(pageNumber))
+    webpage = requests.get('https://www.goodreads.com/author/quotes/957894.Albert_Camus?page={}'.format(pageNumber))
     soup = BeautifulSoup(webpage.text, 'html.parser')
     quoteText = soup.find_all("div", {"class": "quoteText"})
 
@@ -39,7 +39,7 @@ while pageNumber <= endPageNumber:
     pageNumber = pageNumber + 1
 
 
-with open('pythagoras.json', 'w', encoding='utf-8') as file:
+with open('samplefile.json', 'w', encoding='utf-8') as file:
     file.write(JSONdata)
 
 
@@ -77,9 +77,13 @@ def socrates(author):
     serializ_authorQuotes = json.dumps(container_authorQuotes, indent=2, separators=(',', ':'), sort_keys=True, default=json_util.default)  
     return serializ_authorQuotes
 
+@app.route('/')
+def home():
+    return 'Home'
 
 
-'''Quotes from Albert Camus, Confucius, Socrates, Plato, Nietzsche, Immanuel Kant, René Descartes, Fyodor Dostoevsky,
+
+''' Albert Camus, Confucius, Socrates,Plato, Nietzsche, Immanuel Kant, René Descartes, Fyodor Dostoevsky,
    Marcus Aurelius, David Hume, John Locke, Jean-Paul Sartre, Thomas Hobbes, Søren Kierkegaard, Bertrand Russell,
    Epicurus, Niccolò Machiavelli, Arthur Schopenhauer, Pythagoras
 '''

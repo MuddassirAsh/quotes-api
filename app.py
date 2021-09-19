@@ -1,3 +1,4 @@
+import collections
 from flask import Flask 
 from pymongo import MongoClient
 from bson import json_util
@@ -6,6 +7,7 @@ from bs4 import BeautifulSoup
 import requests
 import os
 from dotenv import load_dotenv
+
 
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 load_dotenv(os.path.join(BASEDIR, '.env'))
@@ -54,22 +56,35 @@ db = client['PhilosophicalAPI']
 collection = db['Quotes']
 
 
-@app.route('/random', methods=['GET'])
+@app.route('/random/', methods=['GET'])
 def randoma():
     randomQuote = collection.aggregate([ { '$sample': { 'size': 1 } } ])
     quotes = [x for x in randomQuote]
     serializeQuotes = json.dumps(quotes, indent=2, separators=(',', ':'), sort_keys=True, default=json_util.default)    
     return serializeQuotes
 
-@app.route('/quotes', methods=['GET'])
+@app.route('/quotes/', methods=['GET'])
 def randomTen():
         randomTenQuotes = collection.aggregate([ { '$sample': { 'size': 10 } } ])
         tenQuotes = [x for x in randomTenQuotes]
         serializeTenQuotes = json.dumps(tenQuotes, indent=2, separators=(',', ':'), sort_keys=True, default=json_util.default)  
         return serializeTenQuotes   
 
+@app.route('/socrates/', methods=['GET']) 
+def socrates():
+    authorQuotes = collection.find( {'Source': {'$in': ['Plato'] }})
+    container_authorQuotes = [x for x in authorQuotes ]
+    serializ_authorQuotes = json.dumps(container_authorQuotes, indent=2, separators=(',', ':'), sort_keys=True, default=json_util.default)  
+    return serializ_authorQuotes
 
-'''Quotes from Albert Camu, Confucius, Socrates, Plato, Nietzsche, Immanuel Kant, René Descartes, Fyodor Dostoevsky,
+
+@app.route('/dynamic/<dynamic>', methods=['GET'])
+def home(dynamic):
+    return f'Post {dynamic}'
+
+
+
+'''Quotes from Albert Camus, Confucius, Socrates, Plato, Nietzsche, Immanuel Kant, René Descartes, Fyodor Dostoevsky,
    Marcus Aurelius, David Hume, John Locke, Jean-Paul Sartre, Thomas Hobbes, Søren Kierkegaard, Bertrand Russell,
    Epicurus, Niccolò Machiavelli, Arthur Schopenhauer, Pythagoras
 '''
